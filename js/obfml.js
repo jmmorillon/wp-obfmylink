@@ -40,7 +40,7 @@ jQuery.fn.extend({
  */
 function obfml_upd() {
     if (obfuscation == false) {
-        jQuery(".obf").each(function () {
+        jQuery(".obfml").each(function () {
             var url = atob(jQuery(this).attr("rel"));
             jQuery.replaceTag(this, jQuery('<a>').attr('href', url), true);
         });
