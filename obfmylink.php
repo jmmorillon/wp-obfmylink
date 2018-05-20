@@ -1,17 +1,18 @@
 <?php
 
 /*
-  Plugin Name: ObfMyLink
-  Plugin URI: https://lesiteduplugin.com
-  Description: Obfuscation de lien dans Wordpress
-  Author: DocteurMi sur une idée d'AffilSEO
-  Author URI: http://www.gm-wci.com
+  Plugin Name: OBFMyLink
+  Plugin URI: https://www.jmmorillon.fr/wp-obfmylink
+  Description: Obfuscation de lien dans Wordpress. 
+  Author: Jean-Michel Morillon
+  Author URI: https://twitter.com/docteur_mi
+  Version: 0.2.1
   License: GPL2
  */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-define('OBFML_Version', '0.2.0');
+define('OBFML_Version', '0.2.1');
 
 load_plugin_textdomain('obfml', false, basename( dirname( __FILE__ ) ) . '/languages' );
 

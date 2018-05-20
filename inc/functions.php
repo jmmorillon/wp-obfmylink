@@ -9,8 +9,9 @@ $obfmlOptions = get_option('obfml_options', array());
 function _obfml_init() {
     define('OBFML_MARKER', 'obfml');
 
-    add_action('wp_enqueue_scripts', 'obfml_scripts');
     add_action('admin_menu', '_obfml_admin_menu');
+
+    add_action('wp_enqueue_scripts', 'obfml_scripts');
     add_action('wp_head', '_obfml_start');
     add_action('wp_footer', '_obfml_obfuscation');
 }
@@ -19,8 +20,18 @@ function _obfml_init() {
  * Add admin plugin link
  */
 function _obfml_admin_menu() {
-    add_options_page(__('obfml', 'ObfMyLink Options'), 'ObfMyLink', 'administrator', __FILE__, 'obfml_options_page');
+    add_options_page(__('obfml', 'OBFMyLink Options'), 'OBFMyLink', 'administrator', plugin_basename(__FILE__), 'obfml_options_page');
 }
+
+function _obfml_settings_action_links($links, $file) {
+    if ($file == 'obfmylink/obfmylink.php' && function_exists('admin_url')) {
+        // lien vers la page de config de ce plugin
+        array_unshift($links, '<a href="' . admin_url('options-general.php?page=' . plugin_basename(__FILE__)) . '">' . __('Settings') . '</a>');
+    }
+    return $links;
+}
+
+add_filter('plugin_action_links', '_obfml_settings_action_links', 10, 2);
 
 /**
  * Add JS to front
@@ -178,8 +189,8 @@ function obfml_admin_regexp_fields($datas) {
 function obfml_options_page() {
     ?>
     <div class="wrap">
-        <h1><?php echo __('OBFMyLink version', 'obfml').' '.OBFML_Version; ?></h1>
-        <p><?php echo __('Obfuscation de lien par', 'obfml');?> <a href="https://twitter.com/docteur_mi" target="_blank">DocteurMi</a></p>
+        <h1><?php echo __('OBFMyLink version', 'obfml') . ' ' . OBFML_Version; ?></h1>
+        <p><?php echo __('Obfuscation de lien par', 'obfml'); ?> <a href="https://twitter.com/docteur_mi" target="_blank">DocteurMi</a></p>
 
         <form method="post" action="options.php">
 
@@ -193,28 +204,30 @@ function obfml_options_page() {
             </p>
         </form>
 
-        <h2><?php echo __('Mode d\'emploi', 'obfml');?></h2>
-        <p><?php echo __('Ce plugin peut être utilisé de 4 manières :', 'obfml');?></p>
+        <h2><?php echo __('Mode d\'emploi', 'obfml'); ?></h2>
+        <p><?php echo __('Ce plugin peut être utilisé de 4 manières :', 'obfml'); ?></p>
         <p>
         <ol>
-            <li><?php echo __('Activez l\'obfuscation sur les liens d\'afilliation prédéfinis (Amazon, Clickbank, 1TPE)', 'obfml');?></li>
-            <li><?php echo __('Ajoutez à la fin de vos liens', 'obfml').' : #'.OBFML_MARKER;?></li>
-            <li><?php echo __('Substituez le protocole http de vos liens par', 'obfml').' '.OBFML_MARKER;?><br><?php echo __('ex: http://monlien.fr devient ', 'obfml').''.OBFML_MARKER.'://'.__('monlien.fr', 'obfml');?></li>
-            <li><?php echo __('Utilisez les champs d\'expression régulière REGEXP pour cibler vos propres cibles de liens à obfusquer', 'obfml');?></li>
-            </ol>
-        </p>
-        <p><?php echo __('Le plugin interceptera le code HTML et substituera la balise &lt;a&gt; par une balise &lt;span&gt;, puis transformera le lien du paramètre href en une version encodée base64 et transférée dans un paramètre rel.', 'obfml');?></p>
-        <p><?php echo __('Le script JS se chargera après chargement du DOM par le navigateur, et au mouvement de la souris ou au scroll, de faire la transformation inverse.', 'obfml');?></p>
-        <p><?php echo __('L\'utilisateur voit le lien, les moteurs ne le voit pas !', 'obfml');?></p>
-        
-        <h2><?php echo __('Support');?></h2>
-        <p><?php echo __('Merci d\'utiliser le service GitHub pour toute demande concernant un bug ou une évolution : ', 'obfml');?><a href="https://github.com/jmmorillon/wp-obfmylink/issues" target="_blank">https://github.com/jmmorillon/wp-obfmylink/issues</a></p>
-        
-        <h2><?php echo __('Problèmes d\'affichage ?', 'obfml');?></h2>
-        <p><?php echo __('La transformation d\'une balise &lt;a&gt; par une balise &lt;span&gt; entraine également l\'application des CSS correspondantes, et donc provoque des effets visuels non souhaités. Pour résoudre le problème, il suffira de dupliquer les styles appliqués aux &lt;a&gt; pour les appliquer aux balises &lt;span class="obf"&gt;.', 'obfml');?></p>
-        
-        <h2><?php echo __('Remerciement', 'obfml');?></h2>
-        <p><?php echo __('Merci à SEOAffil pour les idées et les encouragements dans la réalisation de ce plugin.', 'obfml');?></p>
+            <li><?php echo __('Activez l\'obfuscation sur les liens d\'afilliation prédéfinis (Amazon, Clickbank, 1TPE)', 'obfml'); ?></li>
+            <li><?php echo __('Ajoutez à la fin de vos liens', 'obfml') . ' : #' . OBFML_MARKER; ?></li>
+            <li><?php echo __('Substituez le protocole http de vos liens par', 'obfml') . ' ' . OBFML_MARKER; ?><br><?php echo __('ex: http://monlien.fr devient ', 'obfml') . '' . OBFML_MARKER . '://' . __('monlien.fr', 'obfml'); ?></li>
+            <li><?php echo __('Utilisez les champs d\'expression régulière REGEXP pour cibler vos propres cibles de liens à obfusquer', 'obfml'); ?></li>
+        </ol>
+    </p>
+    <p><?php echo __('Le plugin interceptera le code HTML et substituera la balise &lt;a&gt; par une balise &lt;span&gt;, puis transformera le lien du paramètre href en une version encodée base64 et transférée dans un paramètre rel.', 'obfml'); ?></p>
+    <p><?php echo __('Le script JS se chargera après chargement du DOM par le navigateur, et au mouvement de la souris ou au scroll, de faire la transformation inverse.', 'obfml'); ?></p>
+    <p><?php echo __('L\'utilisateur voit le lien, les moteurs ne le voit pas !', 'obfml'); ?></p>
+
+    <h2><?php echo __('Support'); ?></h2>
+    <p><?php echo __('Merci d\'utiliser le service GitHub pour toute demande concernant un bug ou une évolution : ', 'obfml'); ?><a href="https://github.com/jmmorillon/wp-obfmylink/issues" target="_blank">https://github.com/jmmorillon/wp-obfmylink/issues</a></p>
+
+    <h2><?php echo __('Problèmes d\'affichage ?', 'obfml'); ?></h2>
+    <p><?php echo __('La transformation d\'une balise &lt;a&gt; par une balise &lt;span&gt; entraine également l\'application des CSS correspondantes, et donc provoque des effets visuels non souhaités. Pour résoudre le problème, il suffira de dupliquer les styles appliqués aux &lt;a&gt; pour les appliquer aux balises &lt;span class="obf"&gt;.', 'obfml'); ?></p>
+
+    <h2><?php echo __('Remerciement', 'obfml'); ?></h2>
+    <p><?php echo __('Merci à SEOAffil pour les idées et les encouragements dans la réalisation de ce plugin.', 'obfml'); ?></p>
     </div>
     <?php
-};
+}
+
+;
