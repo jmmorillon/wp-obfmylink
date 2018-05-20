@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-define('OBFML_Version', '0.1.1');
+define('OBFML_Version', '0.2.0');
 
 load_plugin_textdomain('obfml', false, basename( dirname( __FILE__ ) ) . '/languages' );
 

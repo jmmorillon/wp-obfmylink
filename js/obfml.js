@@ -45,6 +45,7 @@ function obfml_upd() {
             jQuery.replaceTag(this, jQuery('<a>').attr('href', url), true);
         });
         obfuscation = true;
+        jQuery('a.obfml').removeClass('obfml');
     }
     
     jQuery('body').off('mousemove', 'body', obfml_upd());

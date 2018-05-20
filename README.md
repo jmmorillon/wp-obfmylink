@@ -1,6 +1,6 @@
 # wp-obfmylink
 
-Obfuscation Plugin for Wordpress.
+Obfuscation Plugin for Wordpress by [DocteurMi](https://twitter.com/docteur_mi)
 
 ## Dev Log
 ### 2018-05-17 - v0.1.0
@@ -11,7 +11,12 @@ Obfuscation Plugin for Wordpress.
 + Support for internationalisation
 + Administration page for managing plugin options
 
+### 2018-05-20 - v0.2.0
++ Amazon affiliate links supported
++ Clickbank affiliate links supported
++ 1TPE affiliate links supported
++ User Regexp for specific url
+
 ## Roadmap
-+ Obfuscation by domain recognition
 + Obfuscation of emails
 + ...
