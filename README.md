@@ -20,7 +20,15 @@ Obfuscation Plugin for Wordpress by [DocteurMi](https://twitter.com/docteur_mi)
 ### 2018-05-20 - v0.2.1
 + Add settings link for the plugin to plugins view
 
+### 2018-05-21 - v0.3.0
++ User CSS Path for specific URL
++ Nofollow links obfuscation
+
+### 2018-05-21 - v0.3.1
++ WP Super Cache supported
+
 ## Roadmap
++ Support for various cache plugins
 + Obfuscation of emails
 + Obfuscation of social networks links
 + ...
