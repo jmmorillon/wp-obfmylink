@@ -4,11 +4,13 @@ defined('ABSPATH') or die('No script kiddies please!');
 $obfmlOptions = get_option('obfml_options', array());
 $obfmlContext = array('cache' => 'no');
 
+$obfmlCloacking = new gm_cloacking();
+
 /**
  * Plugin Init
  */
 function _obfml_init() {
-    global $obfmlContext;
+    global $obfmlContext, $obfmlCloacking;
 
     _obfml_context_finder();
 
@@ -16,12 +18,14 @@ function _obfml_init() {
 
     add_action('admin_menu', '_obfml_admin_menu');
 
-    add_action('wp_enqueue_scripts', 'obfml_scripts');
+    if (!$obfmlCloacking->isBot()) {
+        add_action('wp_enqueue_scripts', 'obfml_scripts');
+    }
 
     switch ($obfmlContext['cache']) {
         case 'wp-super-cache':
             if (function_exists('add_cacheaction')) {
-                add_filter( 'wpsupercache_buffer', '_obfml_wp_super_cache' );
+                add_filter('wpsupercache_buffer', '_obfml_wp_super_cache');
             }
             break;
         case 'no':
@@ -34,7 +38,7 @@ function _obfml_init() {
 function _obfml_context_finder() {
     global $obfmlContext;
 
-    if (function_exists('wpsc_init') && (defined('WP_CACHE') && WP_CACHE == true)) {
+    if (function_exists('wpsc_init') && (defined('WP_CACHE') && $cache_enabled == true)) {
         $obfmlContext['cache'] = 'wp-super-cache';
     } else {
         $obfmlContext['cache'] = 'no';
@@ -94,11 +98,25 @@ function _obfml_end() {
  */
 function _obfml_tag_change($elt, $url) {
     $elt->tag = 'span';
-    $elt->rel = base64_encode($url);
+    $elt->setAttribute('data-obfml', base64_encode($url));
     unset($elt->href);
-    $elt->class .= ' ' . OBFML_MARKER;
+    if ($elt->class != '')
+        $elt->class .= ' ';
+    $elt->class .= OBFML_MARKER;
 
     return $elt;
+}
+
+function obfml_encode($url) {
+    
+    $first_encode = base64_encode($url);
+    $nbChar = strlen($first_encode);
+    $cission = 0;
+    if ($nbChar > 10) {
+        $cission = rand(2, 9);
+    }
+    $second_encode = base64_encode($cission . substr($first_encode, $cission, $nbChar-$cission).substr($first_encode, 0, $cission));
+    return $second_encode;
 }
 
 /**
@@ -301,7 +319,7 @@ function obfml_options_page() {
             <li><?php echo __('Utilisez des sélecteurs CSS pour cibler vos propres liens à obfusquer', 'obfml'); ?></li>
         </ol>
     </p>
-    <p><?php echo __('Le plugin interceptera le code HTML et substituera la balise &lt;a&gt; par une balise &lt;span&gt;, puis transformera le lien du paramètre href en une version encodée base64 et transférée dans un paramètre rel.', 'obfml'); ?></p>
+    <p><?php echo __('Le plugin interceptera le code HTML et substituera la balise &lt;a&gt; par une balise &lt;span&gt;, puis transformera le lien du paramètre href en une version encodée base64 et transférée dans un paramètre data-obfml.', 'obfml'); ?></p>
     <p><?php echo __('Le script JS se chargera après chargement du DOM par le navigateur, et au mouvement de la souris ou au scroll, de faire la transformation inverse.', 'obfml'); ?></p>
     <p><?php echo __('L\'utilisateur voit le lien, les moteurs ne le voit pas !', 'obfml'); ?></p>
 

@@ -27,6 +27,10 @@ Obfuscation Plugin for Wordpress by [DocteurMi](https://twitter.com/docteur_mi)
 ### 2018-05-21 - v0.3.1
 + WP Super Cache supported
 
+### 2018-05-22 - v0.3.2
++ Cloacking of JS File
++ Use of a parameter data-obfml instead of rel
+
 ## Roadmap
 + Support for various cache plugins
 + Obfuscation of emails

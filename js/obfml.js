@@ -41,7 +41,7 @@ jQuery.fn.extend({
 function obfml_upd() {
     if (obfuscation == false) {
         jQuery(".obfml").each(function () {
-            var url = atob(jQuery(this).attr("rel"));
+            var url = atob(jQuery(this).data("obfml"));
             jQuery.replaceTag(this, jQuery('<a>').attr('href', url), true);
         });
         obfuscation = true;
